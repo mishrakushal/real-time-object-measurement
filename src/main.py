@@ -29,37 +29,37 @@ while True:
         img = cv2.imread(path)
 
         # Shrink the image by factor of 2 so that it fits the frame
-        img = cv2.resize(img, (0, 0), None, 0.5, 0.5)
+    img = cv2.resize(img, (0, 0), None, 0.5, 0.5)
 
-        img, contours = getContours(img, thresholdArea=50000, filter=4)
+    img, contours = getContours(img, thresholdArea=50000, filter=4)
 
-        if len(contours) > 0:
-            maxContour = contours[0]
-            biggest = maxContour[2]
-            
-            warpImg = warpImage(img, biggest, wPaper, hPaper)
-            cv2.imshow('A4', warpImg)
+    if len(contours) > 0:
+        maxContour = contours[0]
+        biggest = maxContour[2]
+        
+        warpImg = warpImage(img, biggest, wPaper, hPaper)
+        cv2.imshow('A4', warpImg)
 
-            imgIN, contoursIN = getContours(warpImg, thresholdArea=2000, filter=4,cannyThreshold=[50, 50], draw=False)
+        imgIN, contoursIN = getContours(warpImg, thresholdArea=2000, filter=4,cannyThreshold=[50, 50], draw=False)
 
-            if len(contoursIN) > 0:
-                for obj in contoursIN:
-                    cv2.polylines(imgIN, [obj[2]], True, (0, 255, 0), 2)
-                    newPoints = reorder(obj[2])
+        if len(contoursIN) > 0:
+            for obj in contoursIN:
+                cv2.polylines(imgIN, [obj[2]], True, (0, 255, 0), 2)
+                newPoints = reorder(obj[2])
 
-                    # we get width in millimeters
-                    widthMM = findDistance(newPoints[0][0] // SCALE, newPoints[1][0] // SCALE)
+                # we get width in millimeters
+                widthMM = findDistance(newPoints[0][0] // SCALE, newPoints[1][0] // SCALE)
 
-                    # convert the width to centimeteres and round to 1 decimal place
-                    widthCM = round(widthMM / 10, 1)
-                    
-                    # we get the height in millimeters
-                    heightMM = findDistance(newPoints[0][0] // SCALE, newPoints[2][0] // SCALE)
+                # convert the width to centimeteres and round to 1 decimal place
+                widthCM = round(widthMM / 10, 1)
+                
+                # we get the height in millimeters
+                heightMM = findDistance(newPoints[0][0] // SCALE, newPoints[2][0] // SCALE)
 
-                    # convert the height to centimeteres and round to 1 decimal place
-                    heightCM = round(heightMM / 10, 1)
+                # convert the height to centimeteres and round to 1 decimal place
+                heightCM = round(heightMM / 10, 1)
 
-            cv2.imshow('A4', imgIN)
+        cv2.imshow('A4', imgIN)
 
-        cv2.imshow('Original', img)
-        cv2.waitKey(1)
+    cv2.imshow('Original', img)
+    cv2.waitKey(1)
